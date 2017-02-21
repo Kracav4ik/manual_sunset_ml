@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "NeuralNetwork.h"
 #include <QFileDialog>
 
 MainWindow::MainWindow() {
@@ -33,15 +34,30 @@ void MainWindow::on_processButton_clicked() {
         if (i % 100 == 0) {
             progressBar->setValue(i/100);
         }
-
         baseDir.mkpath(QString("%1").arg(lab));
         QString fileName(baseDir.filePath(QString("%1/%2.png").arg(lab).arg(idxs[lab])));
 
         idxs[lab] += 1;
-        const uchar* t = reinterpret_cast<const uchar*>(array_img.constData()) + i*28*28;
+        const uchar* t = reinterpret_cast<const uchar*>(array_img.constData()) + i*784;
         QImage image = QImage(t, 28, 28, QImage::Format_Grayscale8);
-        
-        image.save(fileName);
+        QVector<float> img;
+        for (int x = 0; x < 28; ++x) {
+            for (int y = 0; y < 28; ++y) {
+                img.append((float&&) image.pixelColor(x, y).valueF());
+            }
+        }
+        NeuralNetwork network;
+        QVector<float> out = network.input(img);
+        float max = 0;
+        int maxi = 0;
+        for (int k = 0; k < 10; ++k) {
+            if (max < out[k]){
+                max = out[k];
+                maxi = k;
+            }
+        }
+        printf("real %d, network think %d with %f%%\n", lab, maxi, max*100);
+//        image.save(fileName);
     }
 }
 

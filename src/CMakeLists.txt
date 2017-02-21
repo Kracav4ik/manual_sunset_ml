@@ -20,7 +20,7 @@ set(EXE_SOURCES
         main.cpp
         ml_gui.ui
         MainWindow.cpp
-        MainWindow.h)
+        MainWindow.h ms_math.h NeuralNetwork.cpp NeuralNetwork.h)
 
 add_executable(${EXE_NAME} ${EXE_SOURCES})
 target_link_libraries(${EXE_NAME} Qt5::Widgets Qt5::Core)
