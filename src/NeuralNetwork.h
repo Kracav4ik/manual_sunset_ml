@@ -2,19 +2,28 @@
 
 #include <QVector>
 
+const int IMG_SIZE = 28;
+const int IMG_PIXELS = IMG_SIZE*IMG_SIZE;
+
+// sadly we don't have renderer for Qt types, but they are nicer .___.
+//#define NeuroVector std::vector
+#define NeuroVector QVector
+
 class Neuron{
-    QVector<float> coeff;
+    NeuroVector<float> coeff;
     float bias;
 public:
-    float f(QVector<float> t);
+    float f(const NeuroVector<float>& t) const;
+    Neuron(int inputs);
     Neuron();
 };
 
 class NeuralNetwork {
-    QVector<QVector<Neuron>> layers;
+    typedef NeuroVector<Neuron> Layer;
+    NeuroVector<Layer> layers;
 public:
-    NeuralNetwork();
-    QVector<float> input(QVector<float> img);
+    NeuralNetwork(int hiddenSize, int outputSize);
+    NeuroVector<float> input(const NeuroVector<float>& img);
 };
 
 

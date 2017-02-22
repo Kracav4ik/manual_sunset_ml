@@ -1,39 +1,56 @@
 #include "NeuralNetwork.h"
 
-NeuralNetwork::NeuralNetwork() {}
-
-QVector<float> NeuralNetwork::input(QVector<float> img) {
-    QVector<float> last1;
-    QVector<float> last2;
-    for (int j = 0; j < 1; ++j) {
-        int i1 = 10;
-        if (j == 0){
-            i1 = 1000;
-            last1 = img;
-        }
-        QVector<Neuron> layer;
-        for (int i = 0; i < i1; ++i) {
-            Neuron neuron;
-            layer.append(neuron);
-            last2.append(neuron.f(last1));
-        }
-        layers.append(layer);
-        last1 = last2;
-        last2.clear();
-    }
-    return last1;
-
+float frand() {
+    return qrand()/(float)RAND_MAX;
 }
 
-float Neuron::f(QVector<float> t) {
-    float sum = 0;
-    for (int i = 0; i < 784; ++i) {
+float frand(float a, float b) {
+    return a + frand() * (b - a);
+}
+
+NeuralNetwork::NeuralNetwork(int hiddenSize, int outputSize) {
+    Layer hidden;
+    for (int _ = 0; _ < hiddenSize; ++_) {
+        hidden.push_back(Neuron(IMG_PIXELS));
+    }
+    Layer output;
+    for (int _ = 0; _ < outputSize; ++_) {
+        output.push_back(Neuron(hiddenSize));
+    }
+    layers.push_back(hidden);
+    layers.push_back(output);
+}
+
+NeuroVector<float> NeuralNetwork::input(const NeuroVector<float>& img) {
+    NeuroVector<float> inputData = img;
+    NeuroVector<float> outputData;
+    for (const Layer& layer : layers) {
+        for (const Neuron& neuron : layer) {
+            outputData.push_back(neuron.f(inputData));
+        }
+        inputData = outputData;
+        outputData.clear();
+    }
+    return inputData;
+}
+
+float Neuron::f(const NeuroVector<float>& t) const {
+    float sum = bias;
+    Q_ASSERT(t.size() == coeff.size());
+    for (int i = 0; i < t.size(); ++i) {
         sum += t[i]*coeff[i];
     }
-    return 1/(1 + expf(bias-sum));
+    return 1/(1 + expf(-sum));
 }
 
 
-Neuron::Neuron()
-        : coeff(QVector<float>(784)), bias(qrand() / 66000.f) {}
+Neuron::Neuron(int inputs)
+        : coeff(NeuroVector<float>(inputs)), bias(frand(-1, 1)) {
+    for (float& c : coeff) {
+        c = frand(-1, 1);
+    }
+}
+
+Neuron::Neuron() {
+}
 

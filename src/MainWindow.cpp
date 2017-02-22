@@ -38,25 +38,25 @@ void MainWindow::on_processButton_clicked() {
         QString fileName(baseDir.filePath(QString("%1/%2.png").arg(lab).arg(idxs[lab])));
 
         idxs[lab] += 1;
-        const uchar* t = reinterpret_cast<const uchar*>(array_img.constData()) + i*784;
-        QImage image = QImage(t, 28, 28, QImage::Format_Grayscale8);
-        QVector<float> img;
-        for (int x = 0; x < 28; ++x) {
-            for (int y = 0; y < 28; ++y) {
-                img.append((float&&) image.pixelColor(x, y).valueF());
+        const uchar* t = reinterpret_cast<const uchar*>(array_img.constData()) + i*IMG_PIXELS;
+        QImage image = QImage(t, IMG_SIZE, IMG_SIZE, QImage::Format_Grayscale8);
+        NeuroVector<float> img;
+        for (int x = 0; x < IMG_SIZE; ++x) {
+            for (int y = 0; y < IMG_SIZE; ++y) {
+                img.push_back((float) image.pixelColor(x, y).valueF());
             }
         }
-        NeuralNetwork network;
-        QVector<float> out = network.input(img);
-        float max = 0;
+        NeuralNetwork network(1000, 10);
+        NeuroVector<float> out = network.input(img);
+        float maxv = out[0];
         int maxi = 0;
-        for (int k = 0; k < 10; ++k) {
-            if (max < out[k]){
-                max = out[k];
+        for (int k = 1; k < out.size(); ++k) {
+            if (maxv < out[k]){
+                maxv = out[k];
                 maxi = k;
             }
         }
-        printf("real %d, network think %d with %f%%\n", lab, maxi, max*100);
+        printf("real %d, network think %d with %f%%\n", lab, maxi, maxv*100);
 //        image.save(fileName);
     }
 }
