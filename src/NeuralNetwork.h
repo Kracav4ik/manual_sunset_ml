@@ -7,25 +7,16 @@ const int IMG_SIZE = 28;
 const int IMG_PIXELS = IMG_SIZE*IMG_SIZE;
 
 // sadly we don't have renderer for Qt types, but they are nicer .___.
-//#define NeuroVector std::vector
-#define NeuroVector QVector
-
-class Neuron{
-    NeuroVector<float> coeff;
-    float bias;
-public:
-    float f(const NeuroVector<float>& t) const;
-    Neuron(int inputs);
-    Neuron();
-    Matrix m;
-};
+#define NeuroVector std::vector
+// don't know why, but it not works(. _. )
+//#define NeuroVector QVector
 
 class NeuralNetwork {
-    typedef NeuroVector<Neuron> Layer;
     NeuroVector<Layer> layers;
 public:
-    NeuralNetwork(int hiddenSize, int outputSize);
-    NeuroVector<float> input(const NeuroVector<float>& img);
+    NeuroVector<float> output();
+
+    NeuralNetwork(const NeuroVector<int>& countLayers, const NeuroVector<float>& img);
 };
 
 

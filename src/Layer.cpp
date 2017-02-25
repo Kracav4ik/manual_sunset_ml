@@ -1,3 +1,4 @@
+#include <QVector>
 #include "Layer.h"
 
 float scalar(const vector<float>& v) {
@@ -46,6 +47,47 @@ vector<float> operator*(const vector<float>& v, float f) {
         v2[i] *= f;
     }
     return v2;
+}
+
+vector<float> operator/(const vector<float>& v, float f) {
+    return v * (1/f);
+}
+
+vector<float> operator/(float f, const vector<float>& v) {
+    if (v.empty()){
+        printf("Warning: Your vector is empty in multiply vector by number\n");
+        return v;
+    }
+    vector<float> v2 = v;
+    for (int i = 0; i < v.size(); ++i) {
+        if (v2[i] != 0){
+            v2[i] = f/v2[i];
+        }
+    }
+    return v2;
+}
+
+vector<float> true_expf(vector<float> v){
+    vector<float> res;
+    for (float el: v) {
+        res.push_back(1 / (1 + expf(-el)));
+    }
+    return res;
+}
+
+vector<float> operator+(const vector<float>& v, float f){
+    if (v.empty()){
+        printf("Warning: Your vector is empty in multiply vector by number\n");
+        return v;
+    }
+    vector<float> v2 = v;
+    for (int i = 0; i < v.size(); ++i) {
+        v2[i] += f;
+    }
+    return v2;
+}
+vector<float> operator+(float f, const vector<float>& v){
+    return v + f;
 }
 
 Matrix::Matrix(int width, int height)
@@ -183,9 +225,30 @@ Layer::Layer(const vector<float>& inpt, int count_neuron_in_layer)
         : inp(inpt), coef(count_neuron_in_layer, inpt.size()) {
     for (int i = 0; i < count_neuron_in_layer; ++i) {
         coef[i] = inp * frand();
-        out[i] = scalar(inp * frand());
+        out.push_back(scalar(inp * frand())/inp.size());
     }
-    out = coef[0] + bias;
+
+    for (int i = 0; i < out.size(); ++i) {
+        bias.push_back(frand());
+    }
+
+    out = out + bias;
+    out = true_expf(out);
+}
+
+Layer::Layer(const QVector<float>& inpt, int count_neuron_in_layer)
+        : inp(inpt.toStdVector()), coef(count_neuron_in_layer, inpt.size()) {
+    for (int i = 0; i < count_neuron_in_layer; ++i) {
+        coef[i] = inp * frand();
+        out.push_back(scalar(inp * frand())/inp.size());
+    }
+
+    for (int i = 0; i < out.size(); ++i) {
+        bias.push_back(frand());
+    }
+
+    out = out + bias;
+    out = true_expf(out);
 }
 
 void Layer::recount_out() {
@@ -196,6 +259,10 @@ void Layer::recount_out() {
     out = coef[0] + bias;
 }
 
-vector<float> Layer::get_out() {
+vector<float> Layer::get_outV() {
     return out;
+}
+
+QVector<float> Layer::get_out() {
+    return QVector<float>(out.size(), out.data()[0]);
 }

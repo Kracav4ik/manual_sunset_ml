@@ -13,6 +13,12 @@ vector<float> operator+(const vector<float>& v1, const vector<float>& v2);
 
 vector<float> operator*(const vector<float>& v, float f);
 
+vector<float> operator*(const vector<float>& v, float f);
+
+vector<float> true_expf(vector<float> v);
+
+vector<float> operator+(const vector<float>& v, float f);
+
 class Matrix {
     vector<vector<float>> matrix;
     int _width;
@@ -49,11 +55,17 @@ class Layer {
     vector<float> bias;
     vector<float> inp;
     vector<float> out;
-
+public:
     Layer(const vector<float>& inpt, int count_neuron_in_layer);
+
+    Layer(const QVector<float>& inpt, int count_neuron_in_layer);
 
     void recount_out();
 
-    vector<float> get_out();
+    QVector<float> get_out();
+
+    vector<float> get_outV();
+
+    Layer(){};
 
 };

@@ -46,8 +46,8 @@ void MainWindow::on_processButton_clicked() {
                 img.push_back((float) image.pixelColor(x, y).valueF());
             }
         }
-        NeuralNetwork network(1000, 10);
-        NeuroVector<float> out = network.input(img);
+        NeuralNetwork network({1000, 10},img);
+        NeuroVector<float> out = network.output();
         float maxv = out[0];
         int maxi = 0;
         for (int k = 1; k < out.size(); ++k) {
