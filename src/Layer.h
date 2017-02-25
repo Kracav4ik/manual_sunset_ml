@@ -15,8 +15,8 @@ vector<float> operator*(const vector<float>& v, float f);
 
 class Matrix {
     vector<vector<float>> matrix;
-    int width;
-    int height;
+    int _width;
+    int _height;
 public:
     Matrix(int width, int height);
     Matrix(const vector<vector<float>>& stdmatrix);
@@ -33,16 +33,11 @@ public:
     void set(int x, int y, float value);
     Matrix operator*(const Matrix& other);
 
-    vector<float> operator[](int idx) {
-        if (matrix.empty()) {
-            return vector<float>();
-        }
-        if (idx > matrix.size() - 1) {
-            return matrix[matrix.size() - 1];
-        }
+    vector<float> operator[](int idx) const;
+    vector<float>& operator[](int idx);
 
-        return matrix[idx];
-    }
+    int width() const;
+    int height() const;
 
     QString str();
 
@@ -55,12 +50,10 @@ class Layer {
     vector<float> inp;
     vector<float> out;
 
-    Layer(const vector<float>& inpt, int count_neuron_in_layer)
-            : inp(inpt), coef(inpt.size(), count_neuron_in_layer) {
-        for (int i = 0; i < count_neuron_in_layer; ++i) {
-            coef[i] = inp * frand();
-        }
-    }
+    Layer(const vector<float>& inpt, int count_neuron_in_layer);
 
+    void recount_out();
+
+    vector<float> get_out();
 
 };
