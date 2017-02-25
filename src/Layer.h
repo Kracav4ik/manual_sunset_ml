@@ -18,19 +18,19 @@ class Matrix {
     int width;
     int height;
 public:
-    Matrix(const int& width, const int& height);
+    Matrix(int width, int height);
     Matrix(const vector<vector<float>>& stdmatrix);
 
     void clear();
 
-    vector<float> get_row(const int x) const;
+    vector<float> get_row(int x) const;
 
-    vector<float> get_column(const int& y) const;
+    vector<float> get_column(int y) const;
 
-    float get(const int& x, const int& y) const;
-    float& get(const int& x, const int& y);
+    float get(int x, int y) const;
+    float& get(int x, int y);
 
-    void set(const int& x, const int& y, const float& value);
+    void set(int x, int y, float value);
     Matrix operator*(const Matrix& other);
 
     vector<float> operator[](int idx) {
