@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QVector>
+#include "Layer.h"
 
 const int IMG_SIZE = 28;
 const int IMG_PIXELS = IMG_SIZE*IMG_SIZE;
@@ -16,6 +17,7 @@ public:
     float f(const NeuroVector<float>& t) const;
     Neuron(int inputs);
     Neuron();
+    Matrix m;
 };
 
 class NeuralNetwork {

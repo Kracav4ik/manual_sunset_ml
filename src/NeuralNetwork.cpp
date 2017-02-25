@@ -51,6 +51,5 @@ Neuron::Neuron(int inputs)
     }
 }
 
-Neuron::Neuron() {
-}
+Neuron::Neuron() {}
 
