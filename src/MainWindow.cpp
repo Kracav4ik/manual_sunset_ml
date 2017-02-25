@@ -56,6 +56,10 @@ void MainWindow::on_processButton_clicked() {
                 maxi = k;
             }
         }
+
+        network.process(maxi);
+
+        printf("deltas: %s\n",Matrix(network.deltas).str().toUtf8().toStdString().c_str());
         printf("real %d, network think %d with %f%%\n", lab, maxi, maxv*100);
 //        image.save(fileName);
     }

@@ -12,11 +12,18 @@ const int IMG_PIXELS = IMG_SIZE*IMG_SIZE;
 //#define NeuroVector QVector
 
 class NeuralNetwork {
-    NeuroVector<Layer> layers;
 public:
+    NeuroVector<Layer> layers;
+
+    NeuroVector<vector<float>> deltas;
+
     NeuroVector<float> output();
 
+    Layer getLast();
+
     NeuralNetwork(const NeuroVector<int>& countLayers, const NeuroVector<float>& img);
+
+    void process(int expect);
 };
 
 
