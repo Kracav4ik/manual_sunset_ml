@@ -7,7 +7,7 @@ using namespace std;
 
 float frand();
 
-float scalar(vector<float> v);
+float scalar(const vector<float>& v);
 
 vector<float> operator+(const vector<float>& v1, const vector<float>& v2);
 
@@ -18,17 +18,20 @@ class Matrix {
     int width;
     int height;
 public:
-    Matrix(int width, int height);
+    Matrix(const int& width, const int& height);
+    Matrix(const vector<vector<float>>& stdmatrix);
 
     void clear();
 
-    vector<float> get_row(int x);
+    vector<float> get_row(const int x) const;
 
-    vector<float> get_column(int y);
+    vector<float> get_column(const int& y) const;
 
-    float& get(int x, int y);
+    float get(const int& x, const int& y) const;
+    float& get(const int& x, const int& y);
 
-    Matrix operator*(Matrix other);
+    void set(const int& x, const int& y, const float& value);
+    Matrix operator*(const Matrix& other);
 
     vector<float> operator[](int idx) {
         if (matrix.empty()) {

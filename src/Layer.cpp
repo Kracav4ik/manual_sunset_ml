@@ -1,6 +1,6 @@
 #include "Layer.h"
 
-float scalar(vector<float> v) {
+float scalar(const vector<float>& v) {
     float res = 0;
     for (const float& el: v) {
         res += el;
@@ -19,6 +19,17 @@ vector<float> operator+(const vector<float>& v1, const vector<float>& v2) {
     return v3;
 }
 
+vector<float> operator*(const vector<float>& v1, const vector<float>& v2) {
+    if (v1.size() != v2.size()) {
+        return vector<float>();
+    }
+    vector<float> v3 = v1;
+    for (int i = 0; i < v1.size(); ++i) {
+        v3[i] *= v2[i];
+    }
+    return v3;
+}
+
 vector<float> operator*(const vector<float>& v, float f) {
     vector<float> v2 = v;
     for (int i = 0; i < v.size(); ++i) {
@@ -27,10 +38,12 @@ vector<float> operator*(const vector<float>& v, float f) {
     return v2;
 }
 
-Matrix::Matrix(int width, int height)
+Matrix::Matrix(const int& width, const int& height)
         : width(width), height(height) {
     clear();
 }
+
+Matrix::Matrix(const vector<vector<float>>& stdmatrix) :width(stdmatrix.size()), height(stdmatrix[0].size()), matrix(stdmatrix){}
 
 void Matrix::clear() {
     matrix = vector<vector<float>>();
@@ -43,7 +56,7 @@ void Matrix::clear() {
     }
 }
 
-vector<float> Matrix::get_row(int x) {
+vector<float> Matrix::get_row(const int x) const {
     vector<float> res;
     for (int y = 0; y < matrix[x].size(); ++y) {
         res.push_back(matrix[x][y]);
@@ -51,38 +64,36 @@ vector<float> Matrix::get_row(int x) {
     return res;
 }
 
-vector<float> Matrix::get_column(int y) {
+vector<float> Matrix::get_column(const int& y) const {
     vector<float> res;
     for (int x = 0; x < matrix.size(); ++x) {
-        res.push_back(matrix[x][y]);
+        const float& element = matrix[x][y];
+        res.push_back(element);
     }
     return res;
 }
 
-float& Matrix::get(int x, int y) {
-    for (int i = 0; i < x - width + 1; ++i) {
-        vector<float> vec;
-        for (int j = 0; j < height; ++j) {
-            vec.push_back(0);
-        }
-        matrix.push_back(vec);
-    }
-    for (int i = 0; i < y - height + 1; ++i) {
-        for (int j = 0; j < width; ++j) {
-            matrix[j].push_back(0);
-        }
-    }
+float Matrix::get(const int& x, const int& y) const {
     return matrix[x][y];
 }
 
-Matrix Matrix::operator*(Matrix other) {
+float& Matrix::get(const int& x, const int& y) {
+    float& res = matrix[x][y];
+    return res;
+}
+
+void Matrix::set(const int& x, const int& y, const float& value) {
+    matrix[x][y] = value;
+}
+
+Matrix Matrix::operator*(const Matrix& other) {
     if (other.height != width) {
         return *this;
     }
     Matrix result(height, other.width);
     for (int x = 0; x < other.width; ++x) {
         for (int y = 0; y < height; ++y) {
-            get(x, y) = scalar(other.get_row(x) + get_column(y));
+            result.set(x, y, scalar(other.get_row(x) * get_column(y)));
         }
     }
     return result;
