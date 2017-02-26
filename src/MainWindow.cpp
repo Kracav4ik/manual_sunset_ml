@@ -29,11 +29,16 @@ void MainWindow::on_processButton_clicked() {
     QByteArray array_lab = labFile.readAll().mid(8);
     QByteArray array_img = imgFile.readAll().mid(16);
     QDir baseDir("../conve/images/");
+    NeuralNetwork network(IMG_PIXELS, {100, 10});
+    
+    int right = 0;
+    int wrong = 0;
     for (int i = 0; i < 10000; ++i) {
         int lab = array_lab[i];
         if (i % 100 == 0) {
             progressBar->setValue(i/100);
         }
+        QCoreApplication::processEvents();
         baseDir.mkpath(QString("%1").arg(lab));
         QString fileName(baseDir.filePath(QString("%1/%2.png").arg(lab).arg(idxs[lab])));
 
@@ -46,21 +51,42 @@ void MainWindow::on_processButton_clicked() {
                 img.push_back((float) image.pixelColor(x, y).valueF());
             }
         }
-        NeuralNetwork network({1000, 10},img);
-        NeuroVector<float> out = network.output();
-        float maxv = out[0];
-        int maxi = 0;
-        for (int k = 1; k < out.size(); ++k) {
-            if (maxv < out[k]){
-                maxv = out[k];
-                maxi = k;
+
+        network.process(img);
+        if (i % 200 < 100) {
+            NeuroVector<float> out = network.output();
+            float maxv = out[0];
+            int maxi = 0;
+            for (int k = 1; k < out.size(); ++k) {
+                if (maxv < out[k]){
+                    maxv = out[k];
+                    maxi = k;
+                }
             }
+
+            const char* status;
+            if (lab == maxi) {
+                right++;
+                status = "-CORRECT-";
+            } else {
+                wrong++;
+                status = "incorrect";
+            }
+            printf("%s: real %d, network think %d with %.2f%%\n", status, lab, maxi, maxv * 100);
+        }
+        else {
+            if (i % 200 == 100) {
+                printf("--------------------\nright %2d wrong %d\n====================\n", right, wrong);
+                right = 0;
+                wrong = 0;
+            }
+            printf("training %2d...\n", i % 100);
+            network.train(lab, img, .1);
+//            printf("deltas: %s\n", Matrix(network.deltas).str().toUtf8().toStdString().c_str());
         }
 
-        network.process(maxi);
+//*/
 
-        printf("deltas: %s\n",Matrix(network.deltas).str().toUtf8().toStdString().c_str());
-        printf("real %d, network think %d with %f%%\n", lab, maxi, maxv*100);
 //        image.save(fileName);
     }
 }

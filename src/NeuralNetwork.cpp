@@ -8,35 +8,41 @@ float frand(float a, float b) {
     return a + frand() * (b - a);
 }
 
-NeuralNetwork::NeuralNetwork(const NeuroVector<int>& v, const NeuroVector<float>& img):layers(v.size()), deltas(v.size()) {
-    NeuroVector<float> inputData = img;
-    for (int i = 0; i < v.size(); ++i) {
-        Layer& currentLayer = layers[i];
-        currentLayer = Layer(inputData, v[i]);
-//        inputData = currentLayer.get_out();
-        //    for std
-        inputData = currentLayer.get_outV();
+NeuralNetwork::NeuralNetwork(unsigned int inputSize, const NeuroVector<unsigned int>& sizesVec)
+        : layers(sizesVec.size()), deltas(sizesVec.size()) {
+    for (int i = 0; i < sizesVec.size(); ++i) {
+        layers[i].init(inputSize, sizesVec[i]);
+        inputSize = sizesVec[i];
     }
 }
 
 NeuroVector<float> NeuralNetwork::output() {
 //    return layers.last().get_out();
 //    for std
-    return layers.data()[layers.size() -1].get_outV();
+    return layers.back().get_out();
 }
 
-Layer NeuralNetwork::getLast() {
-    return layers[layers.size()-1];
+void NeuralNetwork::process(NeuroVector<float> inputData) {
+    for (int i = 0; i < layers.size(); ++i) {
+        layers[i].process(inputData);
+        inputData = layers[i].get_out();
+    }
 }
 
-void NeuralNetwork::process(int expect) {
-    vector<float> y(layers[layers.size() - 1].get_outV().size());
+void NeuralNetwork::train(int expect, vector<float> x, float alpha) {
+    vector<float> y(layers.back().get_out().size());
     y[expect] = 1;
-    vector<float> currentDelta = (getLast().get_outV() - y) * sigmaDeriv(getLast().get_z());
+
+    vector<float> currentDelta = (layers.back().get_out() - y) * sigmaDeriv(layers.back().get_z());
     for (int i = deltas.size() - 1; i > 0; --i) {
         deltas[i] = currentDelta;
-        layers[i].coef.transpW();
-        currentDelta = ((layers[i].coef) * currentDelta) * sigmaDeriv(layers[i].get_z());
+        currentDelta = (layers[i].coef.transp() * currentDelta) * sigmaDeriv(layers[i - 1].get_z());
     }
     deltas[0] = currentDelta;
+
+    for (int l = 0; l < layers.size(); ++l) {
+        layers[l].correctInformation(deltas[l], alpha);
+    }
+
+    process(x);
 }
