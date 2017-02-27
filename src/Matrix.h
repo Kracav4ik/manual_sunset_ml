@@ -3,6 +3,16 @@
 #include "Vector.h"
 
 class QString;
+
+class Matrix;
+class RowView {
+    const Matrix& m;
+    int y;
+public:
+    RowView(const Matrix& m, int y);
+    float operator[](int x) const;
+};
+
 class Matrix {
     std::vector<Vector> matrix;
     unsigned int _width;
@@ -13,7 +23,7 @@ public:
 
     const Vector& get_column(int x) const;
 
-    Vector get_row(int y) const;
+    RowView get_row(int y) const;
 
     float get(int x, int y) const;
 

@@ -20,17 +20,12 @@ const Vector& Matrix::get_column(int x) const {
     return matrix[x];
 }
 
-Vector Matrix::get_row(int y) const {
+RowView Matrix::get_row(int y) const {
     if (y > height()){
         printf("Error: Incorrect index for column y(%d)\nindex out of range", y);
         crashForDebug(); // for debug
     }
-    Vector res;
-    for (int x = 0; x < matrix.size(); ++x) {
-        const float& element = matrix[x][y];
-        res.push_back(element);
-    }
-    return res;
+    return RowView(*this, y);
 }
 
 float Matrix::get(int x, int y) const {
@@ -65,7 +60,7 @@ Matrix Matrix::operator*(const Matrix& other) const{
     Matrix result(other.width(), height());
     for (int x = 0; x < other.width(); ++x) {
         for (int y = 0; y < height(); ++y) {
-            result.set(x, y, dot(other.get_column(x), get_row(y)));
+            result.set(x, y, dot(get_row(y), other.get_column(x)));
         }
     }
     return result;
@@ -161,3 +156,7 @@ void Matrix::fillRandf() {
         }
     }
 }
+
+RowView::RowView(const Matrix& m, int y): m(m), y(y) {}
+
+float RowView::operator[](int x) const { return m.get(x, y); }

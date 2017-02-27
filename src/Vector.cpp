@@ -18,13 +18,9 @@ float scalar(const Vector& v) {
     return res;
 }
 
-float dot(const Vector& v1, const Vector& v2) {
-    if (v1.size() != v2.size()) {
-        printf("Error: Incorrect size for multiply vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size());
-        crashForDebug(); // for debug
-    }
+float dot(const RowView& v1, const Vector& v2) {
     float sum = 0;
-    for (int i = 0; i < v1.size(); ++i) {
+    for (int i = 0; i < v2.size(); ++i) {
         sum += v1[i] * v2[i];
     }
     return sum;

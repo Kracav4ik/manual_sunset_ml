@@ -10,7 +10,8 @@ public:
     Vector& operator-=(const Vector& v);
 };
 
-float dot(const Vector& v1, const Vector& v2);
+class RowView;
+float dot(const RowView& v1, const Vector& v2);
 
 Vector operator+(const Vector& v1, const Vector& v2);
 Vector operator+(const Vector& v, float f);
