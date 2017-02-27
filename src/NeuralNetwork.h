@@ -15,11 +15,11 @@ public:
 
     void process(Vector inputData);
 
-    Vector output();
+    const Vector& output();
 
     NeuralNetwork(unsigned int inputSize, const std::vector<unsigned int>& sizesVec);
 
-    void train(int expect, Vector x, float alpha);
+    void train(int expect, const Vector& x, float alpha);
 };
 
 

@@ -23,6 +23,6 @@ Vector operator*(const Vector& v, float f);
 class Matrix;
 Vector operator*(const Matrix& m, const Vector& vec);
 
-Vector sigma(Vector v);
-Vector sigmaDeriv(Vector v);
+Vector sigma(const Vector& v);
+Vector sigmaDeriv(const Vector& v);
 

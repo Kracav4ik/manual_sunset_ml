@@ -8,7 +8,7 @@ NeuralNetwork::NeuralNetwork(unsigned int inputSize, const std::vector<unsigned 
     }
 }
 
-Vector NeuralNetwork::output() {
+const Vector& NeuralNetwork::output() {
 //    return layers.last().get_out();
 //    for std
     return layers.back().get_out();
@@ -21,7 +21,7 @@ void NeuralNetwork::process(Vector inputData) {
     }
 }
 
-void NeuralNetwork::train(int expect, Vector x, float alpha) {
+void NeuralNetwork::train(int expect, const Vector& x, float alpha) {
     Vector y(layers.back().get_out().size());
     y[expect] = 1;
 

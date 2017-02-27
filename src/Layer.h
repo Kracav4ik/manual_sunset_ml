@@ -11,14 +11,14 @@ class Layer {
 public:
     Matrix coef;
 
-    Vector get_out();
+    const Vector& get_out();
 
-    Vector get_z();
+    const Vector& get_z();
 
     Layer(){};
 
     void init(unsigned int inp_size, unsigned int neurons_count);
 
-    void process(Vector inpt);
-    void correctInformation(Vector delta, float alpha);
+    void process(const Vector& inpt);
+    void correctInformation(const Vector& delta, float alpha);
 };

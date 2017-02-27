@@ -12,19 +12,15 @@ Matrix::Matrix(const Vector& stdvector):_width(1), _height(stdvector.size()), ma
     matrix[0] = stdvector;
 }
 
-Vector Matrix::get_row(int x) const {
+const Vector& Matrix::get_column(int x) const {
     if (x > width()){
         printf("Error: Incorrect index for row x(%d)\nindex out of range", x);
         crashForDebug(); // for debug
     }
-    Vector res;
-    for (int y = 0; y < matrix[x].size(); ++y) {
-        res.push_back(matrix[x][y]);
-    }
-    return res;
+    return matrix[x];
 }
 
-Vector Matrix::get_column(int y) const {
+Vector Matrix::get_row(int y) const {
     if (y > height()){
         printf("Error: Incorrect index for column y(%d)\nindex out of range", y);
         crashForDebug(); // for debug
@@ -62,16 +58,6 @@ void Matrix::set(int x, int y, float value) {
 }
 
 Matrix Matrix::operator*(const Matrix& other) const{
-    if (other.width() == height()) {
-        Matrix result(width(), other.height());
-        for (int x = 0; x < width(); ++x) {
-            for (int y = 0; y < other.height(); ++y) {
-                result.set(x, y, scalar(get_row(x) * other.get_column(y)));
-            }
-        }
-        return result;
-    }
-
     if (other.height() != width()) {
         printf("Error: Incorrect value for multiply other height(%d) not equal us width(%d)\n", other.height(), width());
         crashForDebug(); // for debug
@@ -79,7 +65,7 @@ Matrix Matrix::operator*(const Matrix& other) const{
     Matrix result(other.width(), height());
     for (int x = 0; x < other.width(); ++x) {
         for (int y = 0; y < height(); ++y) {
-            result.set(x, y, scalar(other.get_row(x) * get_column(y)));
+            result.set(x, y, scalar(other.get_column(x) * get_row(y)));
         }
     }
     return result;
@@ -118,7 +104,7 @@ QString&& Matrix::str() const {
     }
     return std::move(res);
 }
-Vector Matrix::operator[](int idx) const {
+const Vector& Matrix::operator[](int idx) const {
     if (idx > matrix.size() - 1) {
         printf("Error: Incorrect index in '[]' idx(%d)\nindex out of range", idx);
         crashForDebug(); // for debug

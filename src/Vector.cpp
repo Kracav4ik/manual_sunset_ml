@@ -74,12 +74,12 @@ Vector operator*(const Matrix& m, const Vector& vec) {
     unsigned int columnCount = m.height();
     Vector result(columnCount);
     for (int i = 0; i < columnCount; ++i) {
-        result[i] = dot(m.get_column(i), vec);
+        result[i] = dot(m.get_row(i), vec);
     }
     return result;
 }
 
-Vector sigma(Vector v){
+Vector sigma(const Vector& v){
     Vector res;
     for (float el: v) {
         res.push_back(1 / (1 + expf(-el)));
@@ -87,7 +87,7 @@ Vector sigma(Vector v){
     return res;
 }
 
-Vector sigmaDeriv(Vector v){
+Vector sigmaDeriv(const Vector& v){
     Vector res;
     for (float el: v) {
         res.push_back(expf(-el)/((1 + expf(-el))*(1 + expf(-el))));

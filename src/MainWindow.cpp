@@ -75,7 +75,7 @@ void MainWindow::on_processButton_clicked() {
                 wrong++;
                 status = "incorrect";
             }
-            printf("%s: real %d, network think %d with %.2f%%\n", status, lab, maxi, maxv * 100);
+//            printf("%s: real %d, network think %d with %.2f%%\n", status, lab, maxi, maxv * 100);
         }
         else {
             if (i % BATCH_SIZE == BATCH_SIZE / 2) {

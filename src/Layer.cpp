@@ -3,15 +3,14 @@
 
 #include "utils.h"
 
-Vector Layer::get_out() {
+const Vector& Layer::get_out() {
     return a;
 }
-
-Vector Layer::get_z() {
+const Vector& Layer::get_z() {
     return z;
 }
 
-void Layer::process(Vector inpt) {
+void Layer::process(const Vector& inpt) {
     inp = inpt;
     z = coef * inp + bias;
     a = sigma(z);
@@ -31,7 +30,7 @@ void Layer::init(unsigned int inp_size, unsigned int neurons_count) {
     }
 }
 
-void Layer::correctInformation(Vector delta, float alpha) {
+void Layer::correctInformation(const Vector& delta, float alpha) {
     coef = coef - Matrix(delta) * Matrix(inp).transp() * alpha;
     bias = bias - delta * alpha;
 }
