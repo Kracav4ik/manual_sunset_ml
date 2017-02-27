@@ -1,6 +1,9 @@
 #include "MainWindow.h"
 #include "NeuralNetwork.h"
 #include <QFileDialog>
+#include <QTime>
+
+const int BATCH_SIZE = 200; // keep it divisible by 2 please
 
 MainWindow::MainWindow() {
     setupUi(this);
@@ -34,6 +37,7 @@ void MainWindow::on_processButton_clicked() {
     
     int right = 0;
     int wrong = 0;
+    int start = QTime::currentTime().msecsSinceStartOfDay();
     for (int i = 0; i < 10000; ++i) {
         int lab = array_lab[i];
         if (i % 100 == 0) {
@@ -52,7 +56,7 @@ void MainWindow::on_processButton_clicked() {
         }
 
         network.process(img);
-        if (i % 200 < 100) {
+        if (i % BATCH_SIZE < BATCH_SIZE / 2) {
             Vector out = network.output();
             float maxv = out[0];
             int maxi = 0;
@@ -74,14 +78,19 @@ void MainWindow::on_processButton_clicked() {
             printf("%s: real %d, network think %d with %.2f%%\n", status, lab, maxi, maxv * 100);
         }
         else {
-            if (i % 200 == 100) {
+            if (i % BATCH_SIZE == BATCH_SIZE / 2) {
                 printf("--------------------\nright %2d wrong %d\n====================\n", right, wrong);
                 right = 0;
                 wrong = 0;
             }
-            printf("training %2d...\n", i % 100);
+            printf("training %2d...\n", i % (BATCH_SIZE - BATCH_SIZE / 2));
             network.train(lab, img, .1);
 //            printf("deltas: %s\n", Matrix(network.deltas).str().toUtf8().toStdString().c_str());
+        }
+        if ((i+1) % BATCH_SIZE == 0) {
+            int end = QTime::currentTime().msecsSinceStartOfDay();
+            printf("--------------------\ntime spent for batch: %2d msec\n====================\n", end - start);
+            start = end;
         }
 
 //*/
