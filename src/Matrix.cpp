@@ -65,7 +65,7 @@ Matrix Matrix::operator*(const Matrix& other) const{
     Matrix result(other.width(), height());
     for (int x = 0; x < other.width(); ++x) {
         for (int y = 0; y < height(); ++y) {
-            result.set(x, y, scalar(other.get_column(x) * get_row(y)));
+            result.set(x, y, dot(other.get_column(x), get_row(y)));
         }
     }
     return result;
@@ -92,7 +92,21 @@ Matrix Matrix::operator-(const Matrix& other) {
             result.set(x, y, matrix[x][y] - other[x][y]);
         }
     }
-    return result;}
+    return result;
+}
+
+Matrix& Matrix::operator-=(const Matrix& other) {
+    if (other.width() != width()) {
+        printf("Error: Incorrect value for multiply other height(%d) not equal us width(%d)\n", other.height(), width());
+        crashForDebug(); // for debug
+    }
+    for (int x = 0; x < width(); ++x) {
+        for (int y = 0; y < height(); ++y) {
+            matrix[x][y] -= other[x][y];
+        }
+    }
+    return *this;
+}
 
 QString&& Matrix::str() const {
     QString res;

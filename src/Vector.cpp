@@ -19,7 +19,15 @@ float scalar(const Vector& v) {
 }
 
 float dot(const Vector& v1, const Vector& v2) {
-    return scalar(v1 * v2);
+    if (v1.size() != v2.size()) {
+        printf("Error: Incorrect size for multiply vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size());
+        crashForDebug(); // for debug
+    }
+    float sum = 0;
+    for (int i = 0; i < v1.size(); ++i) {
+        sum += v1[i] * v2[i];
+    }
+    return sum;
 }
 
 Vector operator+(const Vector& v1, const Vector& v2) {
@@ -95,3 +103,13 @@ Vector sigmaDeriv(const Vector& v){
     return res;
 }
 
+Vector& Vector::operator-=(const Vector& v) {
+    if (v.size() != size()) {
+        printf("Error: Incorrect size for -= vector size(%d) not equal own size(%d)\n", v.size(), size());
+        crashForDebug(); // for debug;
+    }
+    for (int i = 0; i < v.size(); ++i) {
+        (*this)[i] -= v[i];
+    }
+    return *this;
+}

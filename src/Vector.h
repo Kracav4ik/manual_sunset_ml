@@ -6,9 +6,9 @@ class Vector : public std::vector<float> {
 public:
     Vector(unsigned int size) : vector(size) {}
     Vector() {}
-};
 
-float scalar(const Vector& v);
+    Vector& operator-=(const Vector& v);
+};
 
 float dot(const Vector& v1, const Vector& v2);
 

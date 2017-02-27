@@ -24,6 +24,8 @@ public:
     Matrix operator*(float num) const;
 
     Matrix operator-(const Matrix& other);
+    Matrix& operator-=(const Matrix& other);
+
     const Vector& operator[](int idx) const;
     Vector& operator[](int idx);
 

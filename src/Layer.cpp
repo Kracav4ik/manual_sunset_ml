@@ -31,6 +31,6 @@ void Layer::init(unsigned int inp_size, unsigned int neurons_count) {
 }
 
 void Layer::correctInformation(const Vector& delta, float alpha) {
-    coef = coef - Matrix(delta) * Matrix(inp).transp() * alpha;
-    bias = bias - delta * alpha;
+    coef -= Matrix(delta) * Matrix(inp).transp() * alpha;
+    bias -= delta * alpha;
 }
