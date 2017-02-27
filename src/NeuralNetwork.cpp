@@ -1,13 +1,5 @@
 #include "NeuralNetwork.h"
 
-float frand() {
-    return qrand()/(float)RAND_MAX;
-}
-
-float frand(float a, float b) {
-    return a + frand() * (b - a);
-}
-
 NeuralNetwork::NeuralNetwork(unsigned int inputSize, const std::vector<unsigned int>& sizesVec)
         : layers(sizesVec.size()), deltas(sizesVec.size()) {
     for (int i = 0; i < sizesVec.size(); ++i) {
