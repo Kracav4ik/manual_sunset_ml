@@ -6,18 +6,6 @@
 #include "Matrix.h"
 
 
-float scalar(const Vector& v) {
-    if (v.empty()){
-        printf("Warning: Your vector is empty in cancer scalar\n");
-        return 0;
-    }
-    float res = 0;
-    for (const float& el: v) {
-        res += el;
-    }
-    return res;
-}
-
 float dot(const RowView& v1, const Vector& v2) {
     float sum = 0;
     for (int i = 0; i < v2.size(); ++i) {
