@@ -18,11 +18,12 @@ void MainWindow::on_processButton_clicked() {
     if (pathEdit->text().isEmpty()){
         return;
     }
+    bool saveImages = generateImages->isChecked();
 
-    QFile labFile("../conve/t10k-labels.idx1-ubyte");
+    QFile labFile(pathEdit->text());
     labFile.open(QIODevice::ReadOnly);
 
-    QFile imgFile("../conve/t10k-images.idx3-ubyte");
+    QFile imgFile(pathEdit->text().replace("-labels.idx1-ubyte", "-images.idx3-ubyte"));
     imgFile.open(QIODevice::ReadOnly);
 
     int idxs[10] = {0};
@@ -39,8 +40,6 @@ void MainWindow::on_processButton_clicked() {
             progressBar->setValue(i/100);
         }
         QCoreApplication::processEvents();
-        baseDir.mkpath(QString("%1").arg(lab));
-        QString fileName(baseDir.filePath(QString("%1/%2.png").arg(lab).arg(idxs[lab])));
 
         idxs[lab] += 1;
         const uchar* t = reinterpret_cast<const uchar*>(array_img.constData()) + i*IMG_PIXELS;
@@ -87,7 +86,11 @@ void MainWindow::on_processButton_clicked() {
 
 //*/
 
-//        image.save(fileName);
+        if (saveImages) {
+            baseDir.mkpath(QString("%1").arg(lab));
+            QString fileName(baseDir.filePath(QString("%1/%2.png").arg(lab).arg(idxs[lab])));
+            image.save(fileName);
+        }
     }
 }
 
