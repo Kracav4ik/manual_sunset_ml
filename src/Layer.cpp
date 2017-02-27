@@ -1,7 +1,7 @@
 #include <QVector>
 #include "Layer.h"
 
-float scalar(const vector<float>& v) {
+float scalar(const Vector& v) {
     if (v.empty()){
         printf("Warning: Your vector is empty in cancer scalar\n");
         return 0;
@@ -13,72 +13,72 @@ float scalar(const vector<float>& v) {
     return res;
 }
 
-float dot(const vector<float>& v1, const vector<float>& v2) {
+float dot(const Vector& v1, const Vector& v2) {
     return scalar(v1 * v2);
 }
 
-vector<float> operator+(const vector<float>& v1, const vector<float>& v2) {
+Vector operator+(const Vector& v1, const Vector& v2) {
     if (v1.size() != v2.size()) {
         printf("Error: Incorrect size for sum vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size());
         crashForDebug(); // for debug
     }
-    vector<float> v3 = v1;
+    Vector v3 = v1;
     for (int i = 0; i < v2.size(); ++i) {
         v3[i] += v2[i];
     }
     return v3;
 }
 
-vector<float> operator-(const vector<float>& v1, const vector<float>& v2) {
+Vector operator-(const Vector& v1, const Vector& v2) {
     if (v1.size() != v2.size()) {
         printf("Error: Incorrect size for sum vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size());
         crashForDebug(); // for debug;
     }
-    vector<float> v3 = v1;
+    Vector v3 = v1;
     for (int i = 0; i < v1.size(); ++i) {
         v3[i] -= v2[i];
     }
     return v3;
 }
 
-vector<float> operator*(const vector<float>& v1, const vector<float>& v2) {
+Vector operator*(const Vector& v1, const Vector& v2) {
     if (v1.size() != v2.size()) {
         printf("Error: Incorrect size for multiply vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size());
         crashForDebug(); // for debug
     }
-    vector<float> v3 = v1;
+    Vector v3 = v1;
     for (int i = 0; i < v1.size(); ++i) {
         v3[i] *= v2[i];
     }
     return v3;
 }
 
-vector<float> operator*(const vector<float>& v, float f) {
+Vector operator*(const Vector& v, float f) {
     if (v.empty()){
         printf("Warning: Your vector is empty in multiply vector by number\n");
         return v;
     }
-    vector<float> v2 = v;
+    Vector v2 = v;
     for (int i = 0; i < v.size(); ++i) {
         v2[i] *= f;
     }
     return v2;
 }
 
-vector<float> operator/(const vector<float>& v, float f) {
+Vector operator/(const Vector& v, float f) {
     return v * (1/f);
 }
 
-vector<float> sigma(vector<float> v){
-    vector<float> res;
+Vector sigma(Vector v){
+    Vector res;
     for (float el: v) {
         res.push_back(1 / (1 + expf(-el)));
     }
     return res;
 }
 
-vector<float> sigmaDeriv(vector<float> v){
-    vector<float> res;
+Vector sigmaDeriv(Vector v){
+    Vector res;
     for (float el: v) {
         res.push_back(expf(-el)/((1 + expf(-el))*(1 + expf(-el))));
     }
@@ -86,31 +86,31 @@ vector<float> sigmaDeriv(vector<float> v){
 }
 
 Matrix::Matrix(unsigned int width, unsigned int height)
-        : _width(width), _height(height), matrix(width, vector<float>(height)) {
+        : _width(width), _height(height), matrix(width, Vector(height)) {
 }
 
-Matrix::Matrix(const vector<float>& stdvector):_width(1), _height(stdvector.size()), matrix(1) {
+Matrix::Matrix(const Vector& stdvector):_width(1), _height(stdvector.size()), matrix(1) {
     matrix[0] = stdvector;
 }
 
-vector<float> Matrix::get_row(int x) const {
+Vector Matrix::get_row(int x) const {
     if (x > width()){
         printf("Error: Incorrect index for row x(%d)\nindex out of range", x);
         crashForDebug(); // for debug
     }
-    vector<float> res;
+    Vector res;
     for (int y = 0; y < matrix[x].size(); ++y) {
         res.push_back(matrix[x][y]);
     }
     return res;
 }
 
-vector<float> Matrix::get_column(int y) const {
+Vector Matrix::get_column(int y) const {
     if (y > height()){
         printf("Error: Incorrect index for column y(%d)\nindex out of range", y);
         crashForDebug(); // for debug
     }
-    vector<float> res;
+    Vector res;
     for (int x = 0; x < matrix.size(); ++x) {
         const float& element = matrix[x][y];
         res.push_back(element);
@@ -199,7 +199,7 @@ QString Matrix::str() const {
     }
     return res;
 }
-vector<float> Matrix::operator[](int idx) const {
+Vector Matrix::operator[](int idx) const {
     if (idx > matrix.size() - 1) {
         printf("Error: Incorrect index in '[]' idx(%d)\nindex out of range", idx);
         crashForDebug(); // for debug
@@ -210,7 +210,7 @@ vector<float> Matrix::operator[](int idx) const {
 
 void crashForDebug() { int i = 1 / 0; }
 
-vector<float>& Matrix::operator[](int idx) {
+Vector& Matrix::operator[](int idx) {
     if (idx > matrix.size() - 1) {
         printf("Error: Incorrect index in '[]' idx(%d)\nindex out of range", idx);
         crashForDebug(); // for debug
@@ -246,24 +246,24 @@ void Matrix::fillRandf() {
 }
 
 
-vector<float> operator*(const Matrix& m, const vector<float>& vec) {
+Vector operator*(const Matrix& m, const Vector& vec) {
     unsigned int columnCount = m.height();
-    vector<float> result(columnCount);
+    Vector result(columnCount);
     for (int i = 0; i < columnCount; ++i) {
         result[i] = dot(m.get_column(i), vec);
     }
     return result;
 }
 
-vector<float> Layer::get_out() {
+Vector Layer::get_out() {
     return a;
 }
 
-vector<float> Layer::get_z() {
+Vector Layer::get_z() {
     return z;
 }
 
-void Layer::process(vector<float> inpt) {
+void Layer::process(Vector inpt) {
     inp = inpt;
     z = coef * inp + bias;
     a = sigma(z);
@@ -283,7 +283,7 @@ void Layer::init(unsigned int inp_size, unsigned int neurons_count) {
     }
 }
 
-void Layer::correctInformation(vector<float> delta, float alpha) {
+void Layer::correctInformation(Vector delta, float alpha) {
     coef = coef - Matrix(delta) * Matrix(inp).transp() * alpha;
     bias = bias - delta * alpha;
 }

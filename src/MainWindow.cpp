@@ -45,7 +45,7 @@ void MainWindow::on_processButton_clicked() {
         idxs[lab] += 1;
         const uchar* t = reinterpret_cast<const uchar*>(array_img.constData()) + i*IMG_PIXELS;
         QImage image = QImage(t, IMG_SIZE, IMG_SIZE, QImage::Format_Grayscale8);
-        NeuroVector<float> img;
+        Vector img;
         for (int x = 0; x < IMG_SIZE; ++x) {
             for (int y = 0; y < IMG_SIZE; ++y) {
                 img.push_back((float) image.pixelColor(x, y).valueF());
@@ -54,7 +54,7 @@ void MainWindow::on_processButton_clicked() {
 
         network.process(img);
         if (i % 200 < 100) {
-            NeuroVector<float> out = network.output();
+            Vector out = network.output();
             float maxv = out[0];
             int maxi = 0;
             for (int k = 1; k < out.size(); ++k) {

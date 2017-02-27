@@ -6,24 +6,20 @@
 const unsigned int IMG_SIZE = 28;
 const unsigned int IMG_PIXELS = IMG_SIZE*IMG_SIZE;
 
-// sadly we don't have renderer for Qt types, but they are nicer .___.
-#define NeuroVector std::vector
-// don't know why, but it not works(. _. )
-//#define NeuroVector QVector
 
 class NeuralNetwork {
 public:
-    NeuroVector<Layer> layers;
+    std::vector<Layer> layers;
 
-    NeuroVector<vector<float>> deltas;
+    std::vector<Vector> deltas;
 
-    void process(NeuroVector<float> inputData);
+    void process(Vector inputData);
 
-    NeuroVector<float> output();
+    Vector output();
 
-    NeuralNetwork(unsigned int inputSize, const NeuroVector<unsigned int>& sizesVec);
+    NeuralNetwork(unsigned int inputSize, const std::vector<unsigned int>& sizesVec);
 
-    void train(int expect, vector<float> x, float alpha);
+    void train(int expect, Vector x, float alpha);
 };
 
 
