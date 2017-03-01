@@ -15,10 +15,7 @@ float dot(const RowView& v1, const Vector& v2) {
 }
 
 Vector operator+(const Vector& v1, const Vector& v2) {
-    if (v1.size() != v2.size()) {
-        printf("Error: Incorrect size for sum vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size());
-        crashForDebug(); // for debug
-    }
+    CHECK(v1.size() != v2.size(), printf("Error: Incorrect size for V+V vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size()); crashForDebug();)
     Vector v3 = v1;
     for (int i = 0; i < v2.size(); ++i) {
         v3[i] += v2[i];
@@ -27,10 +24,7 @@ Vector operator+(const Vector& v1, const Vector& v2) {
 }
 
 Vector operator-(const Vector& v1, const Vector& v2) {
-    if (v1.size() != v2.size()) {
-        printf("Error: Incorrect size for sum vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size());
-        crashForDebug(); // for debug;
-    }
+    CHECK(v1.size() != v2.size(), printf("Error: Incorrect size for V-V vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size()); crashForDebug();)
     Vector v3 = v1;
     for (int i = 0; i < v1.size(); ++i) {
         v3[i] -= v2[i];
@@ -39,10 +33,7 @@ Vector operator-(const Vector& v1, const Vector& v2) {
 }
 
 Vector operator*(const Vector& v1, const Vector& v2) {
-    if (v1.size() != v2.size()) {
-        printf("Error: Incorrect size for multiply vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size());
-        crashForDebug(); // for debug
-    }
+    CHECK(v1.size() != v2.size(), printf("Error: Incorrect size for V*V vectors vec1 size(%d) not equal vec2 size(%d)\n", v1.size(), v2.size()); crashForDebug();)
     Vector v3 = v1;
     for (int i = 0; i < v1.size(); ++i) {
         v3[i] *= v2[i];
@@ -63,6 +54,7 @@ Vector operator*(const Vector& v, float f) {
 }
 
 Vector operator*(const Matrix& m, const Vector& vec) {
+    CHECK(vec.size() != m.width(), printf("Error: Incorrect value for M*V vector size(%d) not equal matrix width(%d)\n", vec.size(), m.width()); crashForDebug();)
     unsigned int columnCount = m.height();
     Vector result(columnCount);
     for (int i = 0; i < columnCount; ++i) {
@@ -88,10 +80,7 @@ Vector sigmaDeriv(const Vector& v){
 }
 
 Vector& Vector::operator-=(const Vector& v) {
-    if (v.size() != size()) {
-        printf("Error: Incorrect size for -= vector size(%d) not equal own size(%d)\n", v.size(), size());
-        crashForDebug(); // for debug;
-    }
+    CHECK(v.size() != size(), printf("Error: Incorrect size for V-=V vector size(%d) not equal own size(%d)\n", v.size(), size()); crashForDebug();)
     for (int i = 0; i < v.size(); ++i) {
         (*this)[i] -= v[i];
     }

@@ -13,50 +13,29 @@ Matrix::Matrix(const Vector& stdvector):_width(1), _height(stdvector.size()), ma
 }
 
 const Vector& Matrix::get_column(int x) const {
-    if (x > width()){
-        printf("Error: Incorrect index for row x(%d)\nindex out of range", x);
-        crashForDebug(); // for debug
-    }
+    CHECK(x >= width(), printf("Error: Incorrect index for column x(%d): index out of range (%d)\n", x, width()); crashForDebug();)
     return matrix[x];
 }
 
 RowView Matrix::get_row(int y) const {
-    if (y > height()){
-        printf("Error: Incorrect index for column y(%d)\nindex out of range", y);
-        crashForDebug(); // for debug
-    }
+    CHECK(y >= height(), printf("Error: Incorrect index for row y(%d): index out of range (%d)\n", y, height()); crashForDebug();)
     return RowView(*this, y);
 }
 
 float Matrix::get(int x, int y) const {
-    if (x > width()){
-        printf("Error: Incorrect index for get x(%d)\nindex out of range", x);
-        crashForDebug(); // for debug
-    }
-    if (y > height()){
-        printf("Error: Incorrect index for get y(%d)\nindex out of range", y);
-        crashForDebug(); // for debug
-    }
+    CHECK(x >= width(), printf("Error: Incorrect index for get x(%d): index out of range (%d)\n", x, width()); crashForDebug();)
+    CHECK(y >= height(), printf("Error: Incorrect index for get y(%d): index out of range (%d)\n", y, height()); crashForDebug();)
     return matrix[x][y];
 }
 
 void Matrix::set(int x, int y, float value) {
-    if (x > width()){
-        printf("Error: Incorrect index for set x(%d)\nindex out of range", x);
-        crashForDebug(); // for debug
-    }
-    if (y > height()){
-        printf("Error: Incorrect index for set y(%d)\nindex out of range", y);
-        crashForDebug(); // for debug
-    }
+    CHECK(x >= width(), printf("Error: Incorrect index for set x(%d): index out of range (%d)\n", x, width()); crashForDebug();)
+    CHECK(y >= height(), printf("Error: Incorrect index for set y(%d): index out of range (%d)\n", y, height()); crashForDebug();)
     matrix[x][y] = value;
 }
 
 Matrix Matrix::operator*(const Matrix& other) const{
-    if (other.height() != width()) {
-        printf("Error: Incorrect value for multiply other height(%d) not equal us width(%d)\n", other.height(), width());
-        crashForDebug(); // for debug
-    }
+    CHECK(other.height() != width(), printf("Error: Incorrect value for M*M other height(%d) not equal our width(%d)\n", other.height(), width()); crashForDebug();)
     Matrix result(other.width(), height());
     for (int x = 0; x < other.width(); ++x) {
         for (int y = 0; y < height(); ++y) {
@@ -77,10 +56,8 @@ Matrix Matrix::operator*(float num) const {
 }
 
 Matrix Matrix::operator-(const Matrix& other) {
-    if (other.width() != width()) {
-        printf("Error: Incorrect value for multiply other height(%d) not equal us width(%d)\n", other.height(), width());
-        crashForDebug(); // for debug
-    }
+    CHECK(other.width() != width(), printf("Error: Incorrect value for M-M other width(%d) not equal us width(%d)\n", other.width(), width()); crashForDebug();)
+    CHECK(other.height() != height(), printf("Error: Incorrect value for M-M other height(%d) not equal us height(%d)\n", other.height(), height()); crashForDebug();)
     Matrix result(width(), height());
     for (int x = 0; x < width(); ++x) {
         for (int y = 0; y < height(); ++y) {
@@ -91,10 +68,8 @@ Matrix Matrix::operator-(const Matrix& other) {
 }
 
 Matrix& Matrix::operator-=(const Matrix& other) {
-    if (other.width() != width()) {
-        printf("Error: Incorrect value for multiply other height(%d) not equal us width(%d)\n", other.height(), width());
-        crashForDebug(); // for debug
-    }
+    CHECK(other.width() != width(), printf("Error: Incorrect value for M-=M other width(%d) not equal us width(%d)\n", other.width(), width()); crashForDebug();)
+    CHECK(other.height() != height(), printf("Error: Incorrect value for M-=M other height(%d) not equal us height(%d)\n", other.height(), height()); crashForDebug();)
     for (int x = 0; x < width(); ++x) {
         for (int y = 0; y < height(); ++y) {
             matrix[x][y] -= other[x][y];
@@ -114,20 +89,12 @@ QString&& Matrix::str() const {
     return std::move(res);
 }
 const Vector& Matrix::operator[](int idx) const {
-    if (idx > matrix.size() - 1) {
-        printf("Error: Incorrect index in '[]' idx(%d)\nindex out of range", idx);
-        crashForDebug(); // for debug
-    }
-
+    CHECK(idx >= matrix.size(), printf("Error: Incorrect index in const M[] idx(%d): index out of range (%d)", idx, matrix.size()); crashForDebug();)
     return matrix[idx];
 }
 
 Vector& Matrix::operator[](int idx) {
-    if (idx > matrix.size() - 1) {
-        printf("Error: Incorrect index in '[]' idx(%d)\nindex out of range", idx);
-        crashForDebug(); // for debug
-    }
-
+    CHECK(idx >= matrix.size(), printf("Error: Incorrect index in M[] idx(%d): index out of range (%d)", idx, matrix.size()); crashForDebug();)
     return matrix[idx];
 }
 
