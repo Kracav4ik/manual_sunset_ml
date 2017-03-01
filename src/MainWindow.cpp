@@ -38,6 +38,7 @@ void MainWindow::on_processButton_clicked() {
     int right = 0;
     int wrong = 0;
     int start = QTime::currentTime().msecsSinceStartOfDay();
+    int globalStart = start;
     for (int i = 0; i < 10000; ++i) {
         int lab = array_lab[i];
         if (i % 100 == 0) {
@@ -83,7 +84,7 @@ void MainWindow::on_processButton_clicked() {
                 right = 0;
                 wrong = 0;
             }
-            printf("training %2d...\n", i % (BATCH_SIZE - BATCH_SIZE / 2));
+//            printf("training %2d...\n", i % (BATCH_SIZE - BATCH_SIZE / 2));
             network.train(lab, img, .1);
 //            printf("deltas: %s\n", Matrix(network.deltas).str().toUtf8().toStdString().c_str());
         }
@@ -101,5 +102,8 @@ void MainWindow::on_processButton_clicked() {
             image.save(fileName);
         }
     }
+    progressBar->setValue(100);
+    int globalEnd = QTime::currentTime().msecsSinceStartOfDay();
+    printf("\n--------------------\ntotal time spent: %2d msec\n====================\n", globalEnd - globalStart);
 }
 
