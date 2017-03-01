@@ -89,3 +89,11 @@ Vector& Vector::operator-=(const Vector& v) {
     }
     return *this;
 }
+
+Vector& Vector::operator+=(const Vector& v) {
+    CHECK(v.size() != size(), printf("Error: Incorrect size for += vector size(%d) not equal own size(%d)\n", v.size(), size()); crashForDebug();)
+    for (int i = 0; i < v.size(); ++i) {
+        (*this)[i] += v[i];
+    }
+    return *this;
+}

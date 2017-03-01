@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Vector.h"
-
-class QString;
+#include <QString>
 
 class Matrix;
 class RowView {
@@ -45,8 +44,10 @@ public:
     Matrix transp() const;
 
     void fillRandf();
+    void fill(float f);
 
-    QString&& str() const;
+    QString str() const;
+    QString strForPrint() const;
 
     Matrix() {}
 };

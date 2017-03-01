@@ -8,6 +8,8 @@ public:
     Vector() {}
 
     Vector& operator-=(const Vector& v);
+
+    Vector& operator+=(const Vector& v);
 };
 
 class RowView;

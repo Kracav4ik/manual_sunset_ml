@@ -78,7 +78,18 @@ Matrix& Matrix::operator-=(const Matrix& other) {
     return *this;
 }
 
-QString&& Matrix::str() const {
+QString Matrix::str() const {
+    QString res;
+    for (int x = 0; x < width(); ++x) {
+        for (int y = 0; y < height(); ++y) {
+            res += QString("%1 ").arg(get(x, y));
+        }
+//        res += "\n";
+    }
+    return res;
+}
+
+QString Matrix::strForPrint() const {
     QString res;
     for (int x = 0; x < width(); ++x) {
         for (int y = 0; y < height(); ++y) {
@@ -86,8 +97,10 @@ QString&& Matrix::str() const {
         }
         res += "\n";
     }
-    return std::move(res);
+    return res;
 }
+
+
 const Vector& Matrix::operator[](int idx) const {
     CHECK(idx >= matrix.size(), printf("Error: Incorrect index in const M[] idx(%d): index out of range (%d)", idx, matrix.size()); crashForDebug();)
     return matrix[idx];
@@ -120,6 +133,14 @@ void Matrix::fillRandf() {
     for (int x = 0; x < width(); ++x) {
         for (int y = 0; y < height(); ++y) {
             matrix[x][y] = frand(-1, 1);
+        }
+    }
+}
+
+void Matrix::fill(float f) {
+    for (int x = 0; x < width(); ++x) {
+        for (int y = 0; y < height(); ++y) {
+            matrix[x][y] = f;
         }
     }
 }
