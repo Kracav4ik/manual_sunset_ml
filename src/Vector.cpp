@@ -65,6 +65,7 @@ Vector operator*(const Matrix& m, const Vector& vec) {
 
 Vector sigma(const Vector& v){
     Vector res;
+    res.reserve(v.size());
     for (float el: v) {
         res.push_back(1 / (1 + expf(-el)));
     }
@@ -73,8 +74,10 @@ Vector sigma(const Vector& v){
 
 Vector sigmaDeriv(const Vector& v){
     Vector res;
+    res.reserve(v.size());
     for (float el: v) {
-        res.push_back(expf(-el)/((1 + expf(-el))*(1 + expf(-el))));
+        float e_mx = expf(-el);
+        res.push_back(e_mx / ((1 + e_mx) * (1 + e_mx)));
     }
     return res;
 }
