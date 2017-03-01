@@ -31,18 +31,29 @@ void MainWindow::on_processButton_clicked() {
 
     int idxs[10] = {0};
     QByteArray array_lab = labFile.readAll().mid(8);
-    QByteArray array_img = imgFile.readAll().mid(16);
+    QByteArray array_img = imgFile.readAll();
+    QByteArray array;
+    for (int j = 7; j > 3; --j) {
+        array.push_back(array_img.mid(j, 1));
+    }
+    for (char byte : array) {
+        printf("%02x ", (uchar)byte);
+    }
+    printf("\n");
+    int count = *(int*)array.data();
+    array_img = array_img.mid(16);
     QDir baseDir("../conve/images/");
     NeuralNetwork network(IMG_PIXELS, {100, 10});
     
     int right = 0;
     int wrong = 0;
+    float elapsed = .1;
     int start = QTime::currentTime().msecsSinceStartOfDay();
     int globalStart = start;
-    for (int i = 0; i < 10000; ++i) {
+    for (int i = 0; i < count; ++i) {
         int lab = array_lab[i];
         if (i % 100 == 0) {
-            progressBar->setValue(i/100);
+            progressBar->setValue(i/(count/100));
         }
         QCoreApplication::processEvents();
 
@@ -85,7 +96,7 @@ void MainWindow::on_processButton_clicked() {
                 wrong = 0;
             }
 //            printf("training %2d...\n", i % (BATCH_SIZE - BATCH_SIZE / 2));
-            network.train(lab, img, .1);
+            network.train(lab, img, elapsed);
 //            printf("deltas: %s\n", Matrix(network.deltas).str().toUtf8().toStdString().c_str());
         }
         if ((i+1) % BATCH_SIZE == 0) {
