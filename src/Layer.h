@@ -4,11 +4,11 @@
 
 
 class Layer {
+public:
     Vector bias;
     Vector inp;
     Vector z;
     Vector a;
-public:
     Matrix coef;
 
     const Vector& get_out();
