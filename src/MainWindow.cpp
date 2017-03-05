@@ -47,7 +47,7 @@ void MainWindow::on_processButton_clicked() {
     
     int right = 0;
     int wrong = 0;
-    float elapsed = .1;
+    float step = (float) doubleSpinBox->value();
     int start = QTime::currentTime().msecsSinceStartOfDay();
     int globalStart = start;
     for (int i = 0; i < count; ++i) {
@@ -96,7 +96,7 @@ void MainWindow::on_processButton_clicked() {
                 wrong = 0;
             }
 //            printf("training %2d...\n", i % (BATCH_SIZE - BATCH_SIZE / 2));
-            network.train(lab, img, elapsed);
+            network.train(lab, img, step);
 //            printf("deltas: %s\n", Matrix(network.deltas).str().toUtf8().toStdString().c_str());
         }
         if ((i+1) % BATCH_SIZE == 0) {
