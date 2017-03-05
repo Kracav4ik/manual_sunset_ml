@@ -25,10 +25,10 @@ void NeuralNetwork::train(int expect, const Vector& x, float alpha) {
     Vector y(layers.back().get_out().size());
     y[expect] = 1;
 
-    Vector currentDelta = (layers.back().get_out() - y) * sigmaDeriv(layers.back().get_z());
+    Vector currentDelta = (layers.back().get_out() - y);
     for (int i = deltas.size() - 1; i > 0; --i) {
         deltas[i] = currentDelta;
-        currentDelta = (layers[i].coef.transp() * currentDelta) * sigmaDeriv(layers[i - 1].get_z());
+        currentDelta = (layers[i].coef.transp() * currentDelta);
     }
     deltas[0] = currentDelta;
 
